@@ -3,8 +3,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
 
-import SkipList.SkipNode;
-
 
 /**
  * This class implements SkipList data structure and contains an inner SkipNode
@@ -19,6 +17,7 @@ import SkipList.SkipNode;
  *            Value
  */
 public class SkipList<K extends Comparable<? super K>, V>
+
     implements Iterable<KVPair<K, V>> {
     private SkipNode head; // First element of the top level
     private int size; // number of entries in the Skip List
@@ -54,6 +53,7 @@ public class SkipList<K extends Comparable<? super K>, V>
      *            key to be searched for
      */
     public ArrayList<KVPair<K, V>> search(K key) {
+    	
    	 ArrayList<KVPair<K, V>> result = new ArrayList<>();
 	    SkipNode current = head;
 	    // Traverse the SkipList starting from the head node at the highest level
@@ -98,6 +98,28 @@ public class SkipList<K extends Comparable<? super K>, V>
     @SuppressWarnings("unchecked")
     public void insert(KVPair<K, V> it) {
 
+    	int newLevel = randomLevel(); // New node's level
+        if (newLevel > head.level) { // If new node is deeper
+          adjustHead(newLevel); // adjust the header
+        }
+        
+     // Track end of level
+        SkipNode[] update = (SkipNode[])Array.newInstance(SkipList.SkipNode.class,
+                newLevel + 1);
+        SkipNode x = head; // Start at header node
+        for (int i = newLevel; i >= 0; i--) { // Find insert position
+          while ((x.forward[i] != null) && (x.forward[i].element().getKey().compareTo(it.getKey()) < 0))
+            x = x.forward[i];
+          update[i] = x; // Track end at level i
+        }
+    	 
+        x = new SkipNode(it, newLevel);
+        for (int i = 0; i <= newLevel; i++) { // Splice into list
+          x.forward[i] = update[i].forward[i]; // Who x points to
+          update[i].forward[i] = x; // Who points to x
+        }
+        size++; // Increment dictionary size
+    	 
     }
 
 
@@ -110,7 +132,12 @@ public class SkipList<K extends Comparable<? super K>, V>
      */
     @SuppressWarnings("unchecked")
     private void adjustHead(int newLevel) {
-
+    	SkipNode temp = head;
+        head = new SkipNode(null, newLevel);
+        for (int i = 0; i <= head.level; i++) {
+          head.forward[i] = temp.forward[i];
+        }
+        head.level = newLevel;
     }
 
 
@@ -125,11 +152,41 @@ public class SkipList<K extends Comparable<? super K>, V>
 
     @SuppressWarnings("unchecked")
     public KVPair<K, V> remove(K key) {
-        return null;
-
+        // Search for the key to remove
+        SkipNode[] update = (SkipNode[])Array.newInstance(SkipList.SkipNode.class, head.level + 1);
+        boolean removed = false;
+        SkipNode current = head;
+        SkipNode x = head;
+        // Traverse the SkipList starting from the head node at the highest level
+        for (int i = head.level; i >= 0; i--) {
+            // Move down the levels until the target key is found or a larger key is encountered
+            while (current.forward[i] != null && current.forward[i].pair.getKey().compareTo(key) < 0) {
+                current = current.forward[i];
+                update[i] = current;
+            }
+            // If the target key is found,
+            if (current.forward[i] != null && current.forward[i].pair.getKey().compareTo(key) == 0) {
+                removed = true;
+                x = current.forward[i];
+                for (int j = 0; j <= head.level; j++) { // Splice into list
+                    update[j].forward[j] = x.forward[j]; // Who x points to
+                }
+                size--;
+                break;
+            }
+        }
+        // Return null if the target key is not found
+        if (!removed) {
+            return null;
+        }
+        // Return the removed KVPair object
+        else {
+            KVPair<K, V> myPair = new KVPair<>(key, x.pair.getValue());
+            return myPair;
+        }
     }
-
-
+    
+    
     /**
      * Removes a KVPair with the specified value.
      * 
@@ -137,11 +194,45 @@ public class SkipList<K extends Comparable<? super K>, V>
      *            the value of the KVPair to be removed
      * @return returns true if the removal was successful
      */
+  
     public KVPair<K, V> removeByValue(V val) {
-        return null;
+        // Search for the value to remove
+        SkipNode[] update = (SkipNode[])Array.newInstance(SkipList.SkipNode.class, head.level + 1);
+        boolean removed = false;
+        SkipNode current = head;
+        SkipNode x = head;
+
+        // Traverse the SkipList starting from the head node at the highest level
+        for (int i = head.level; i >= 0; i--) {
+            // Move down the levels until the target key is found or a larger key is encountered
+            while (current.forward[i] != null && current.forward[i].pair.getValue().equals(val) == false) {
+                current = current.forward[i];
+                update[i] = current;
+            }
+            // If the target key is found,
+            if (current.forward[i] != null && current.forward[i].pair.getValue().equals(val)) {
+                removed = true;
+                x = current.forward[i];
+                for (int j = 0; j <= head.level; j++) { // Splice into list
+                    update[j].forward[j] = x.forward[j]; // Who x points to
+                }
+                size--;
+                break;
+            }
+        }
+        // Return null if the target key is not found
+        if (!removed) {
+            return null;
+        }
+        // Return the removed KVPair object
+        else {
+            KVPair<K, V> myPair = new KVPair<>(x.pair.getKey(), x.pair.getValue());
+            return myPair;
+        }
     }
-
-
+    
+    
+    
     /**
      * Prints out the SkipList in a human readable format to the console.
      */
@@ -226,3 +317,24 @@ public class SkipList<K extends Comparable<? super K>, V>
     }
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

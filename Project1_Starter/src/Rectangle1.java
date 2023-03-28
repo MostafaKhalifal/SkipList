@@ -1,7 +1,8 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Scanner;
-
+import java.awt.Rectangle;
 // On my honor:
 //
 // - I have not used source code obtained from another student,
@@ -45,12 +46,10 @@ public class Rectangle1 {
         // the file object
         File file = null;
 
-        
-
         // Attempts to open the file and scan through it
         try {
         	// takes the first command line argument and opens that file
-            file = new File(args[0]);
+            file = new File("F:\\Algorithm fci\\project\\mostfa\\P1test2.txt");
            
             // creates a scanner object
             Scanner scanner = new Scanner(file);
