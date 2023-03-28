@@ -237,6 +237,22 @@ public class SkipList<K extends Comparable<? super K>, V>
      * Prints out the SkipList in a human readable format to the console.
      */
     public void dump() {
+    
+    SkipNode current = head;
+    while (current.forward[0] != null) {
+        current = current.forward[0];
+        System.out.print("Level " + current.level + ": ");
+        SkipNode node = head;
+        while (node != null) {
+            if (node == current) {
+                System.out.print("[" + node.pair.getKey() + ", " + node.pair.getValue() + "] ");
+            } else {
+                System.out.print("     ");
+            }
+            node = node.forward[node.level];
+        }
+        System.out.println();
+    }
 
     }
 
