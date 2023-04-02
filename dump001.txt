@@ -1,0 +1,20 @@
+public void dump() {
+    if (size == 0) {
+        System.out.println("SkipList dump:");
+        System.out.println("Node has depth 1, Value (null)");
+        System.out.println("SkipList size is: 0");
+        return;
+    }
+
+    System.out.println("SkipList dump:");
+    SkipNode node = head;
+    for (int i = head.forward.length - 1; i >= 0; i--) {
+        node = head.forward[i];
+        System.out.printf("Node has depth %d, Value (%s, %s)\n", i + 1, node.pair.getKey(), node.pair.getValue());
+        while (node.forward[i] != null) {
+            node = node.forward[i];
+            System.out.printf("Node has depth %d, Value (%s, %s)\n", i + 1, node.pair.getKey(), node.pair.getValue());
+        }
+    }
+    System.out.printf("SkipList size is: %d\n", size);
+}
