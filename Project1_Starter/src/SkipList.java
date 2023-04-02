@@ -236,21 +236,23 @@ public class SkipList<K extends Comparable<? super K>, V>
     /**
      * Prints out the SkipList in a human readable format to the console.
      */
-public void dump() {
-    System.out.println("SkipList dump:");
-    if (size == 0) {
-        System.out.println("Node has depth 1, Value (null)");
-        System.out.println("SkipList size is: 0");
-        return;
+    public void dump() {
+        SkipNode curr = head;
+        System.out.println("SkipList dump:");
+        // size : number of entries in the Skip List
+        if (size == 0) {
+            System.out.println("Node has depth 1, Value (null)");
+            System.out.println("SkipList size is: 0");
+            return;
+        }
+        System.out.println("Node has depth " + curr.level + ", Value (null) #header node");
+        
+        while (curr.forward[0] != null) {
+            System.out.println("Node has depth " + curr.level + ", Value (" + curr.pair.getKey() +", "+ curr.pair.getValue() + ")");
+            
+        }
+        System.out.println("SkipList size is: " + size);
     }
-    System.out.println("Node has depth " + head.forward.length + ", Value (null) #header node");
-    SkipNode curr = head.forward[0];
-    while (curr != null) {
-        System.out.println("Node has depth " + curr.level + ", Value " + curr.pair);
-        curr = curr.forward[0];
-    }
-    System.out.println("SkipList size is: " + size);
-}
 
 
     }
