@@ -2,7 +2,8 @@
 Data Structures and Algorithms Project
 "college project"
 
-==========================================================================================
+=====================================================
+
 Assignment
 
 Please download the starter code from files tab
