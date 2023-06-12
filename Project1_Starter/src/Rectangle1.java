@@ -49,8 +49,9 @@ public class Rectangle1 {
         // Attempts to open the file and scan through it
         try {
         	// takes the first command line argument and opens that file
-            file = new File("F:\\Algorithm fci\\project\\mostfa\\P1test2.txt");
+            file = new File("P1test1.txt");
            
+        	
             // creates a scanner object
             Scanner scanner = new Scanner(file);
            

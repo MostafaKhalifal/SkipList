@@ -78,14 +78,12 @@
 
     }
 
-
     /**
      * Returns the KVPair in a human readable format.
      *
      * @return A human readable string representing the KVPair object
      */
     public String toString() {
-        return "(" + key + ", " + value
-            + ")";
+        return "(" + key + ", " + value+ ")";
     }
 }
